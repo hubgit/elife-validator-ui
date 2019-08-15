@@ -65,6 +65,7 @@ const Header = styled.div`
 const Brand = styled.span`
   color: #666865;
   font-weight: 500;
+  font-size: 23px;
 `
 
 const Logo = styled.div`
