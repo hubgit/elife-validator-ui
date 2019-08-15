@@ -88,6 +88,15 @@ const Form = styled.form`
   margin: 0;
 `
 
+const SchematronLabel = styled.label`
+  display: flex;
+  align-items: center;
+
+  select {
+    margin-right: 1ch;
+  }
+`
+
 export const App = () => {
   const [error, setError] = useState(undefined)
   const [formatting, setFormatting] = useState(false)
@@ -279,7 +288,7 @@ export const App = () => {
 
               <Validations
                 title={
-                  <label>
+                  <SchematronLabel>
                     <select
                       onChange={handleSchematronChange}
                       value={schematron}
@@ -288,8 +297,8 @@ export const App = () => {
                       <option value={'elife-pre'}>eLife pre</option>
                       <option value={'elife-final'}>eLife final</option>
                     </select>
-                    {' Schematron'}
-                  </label>
+                    Schematron
+                  </SchematronLabel>
                 }
                 url={`${VALIDATOR_URL}/schematron/`}
                 xml={xml}
