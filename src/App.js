@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { editor } from './editor'
-import { Info } from './Info'
-import logo from './logo.png'
+import logo from './logo.svg'
 import { Validations } from './Validations'
 
-const VALIDATOR_URL = 'https://jats-validator.now.sh'
+const VALIDATOR_URL = 'https://jats-validator.onrender.com'
+// const VALIDATOR_URL = 'http://localhost:4000'
 
 const Container = styled.div`
   display: flex;
@@ -59,17 +59,17 @@ const Header = styled.div`
   align-items: center;
   font-size: 120%;
   flex-wrap: wrap;
+  line-height: 1;
 `
 
-const Brand = styled.span``
+const Brand = styled.span`
+  color: #666865;
+  font-weight: 500;
+`
 
 const Logo = styled.div`
   display: flex;
   align-items: center;
-
-  ${Brand} {
-    margin: 0 1ch;
-  }
 
   a {
     text-decoration: none;
@@ -92,15 +92,13 @@ export const App = () => {
   const [formatting, setFormatting] = useState(false)
   const [xml, setXML] = useState(undefined)
   const [annotations, setAnnotations] = useState([])
+  const [schematron, setSchematron] = useState('jats4r')
 
   const inputRef = useRef(undefined)
 
-  const addAnnotations = useCallback(
-    newAnnotations => {
-      setAnnotations(annotations => [...annotations, ...newAnnotations])
-    },
-    [setAnnotations]
-  )
+  const addAnnotations = useCallback(newAnnotations => {
+    setAnnotations(annotations => [...annotations, ...newAnnotations])
+  }, [])
 
   useEffect(() => {
     editor.setOption('lint', {
@@ -132,13 +130,13 @@ export const App = () => {
           setFormatting(false)
         })
     }
-  }, [setFormatting, setXML])
+  }, [])
 
   useEffect(() => {
     if (!xml) {
       setAnnotations([])
     }
-  }, [xml, setAnnotations])
+  }, [xml])
 
   const attachEditor = useCallback(node => {
     if (node) {
@@ -181,7 +179,7 @@ export const App = () => {
       const body = new FormData()
       body.set('xml', input.files[0])
 
-      fetch(`${VALIDATOR_URL}/format`, {
+      fetch(`${VALIDATOR_URL}/format/`, {
         method: 'POST',
         body,
       })
@@ -206,7 +204,7 @@ export const App = () => {
           setError(error)
         })
     }
-  }, [inputRef, setError, setFormatting])
+  }, [inputRef])
 
   const onSubmit = useCallback(
     event => {
@@ -221,8 +219,8 @@ export const App = () => {
       <Main>
         <Header>
           <Logo>
-            <a href={'https://jats4r.org/'}>
-              <img src={logo} alt={'JATS4R logo'} height={64} />
+            <a href={'https://elifesciences.org/'}>
+              <img src={logo} alt={'eLife logo'} height={64} />
             </a>
             <Brand>Validator</Brand>
           </Logo>
@@ -247,11 +245,7 @@ export const App = () => {
           </Form>
         </Header>
 
-        {editor.getValue() ? (
-          <Editor ref={attachEditor} tabIndex={2} />
-        ) : (
-          <Info />
-        )}
+        {editor.getValue() ? <Editor ref={attachEditor} tabIndex={2} /> : null}
       </Main>
 
       <Sidebar>
@@ -272,16 +266,26 @@ export const App = () => {
             <div>
               <Validations
                 title={'JATS DTD'}
-                url={`${VALIDATOR_URL}/dtd`}
+                url={`${VALIDATOR_URL}/dtd/`}
                 xml={xml}
                 addAnnotations={addAnnotations}
                 scrollTo={scrollTo}
               />
 
               <Validations
-                title={'JATS4R Schematron'}
-                url={`${VALIDATOR_URL}/schematron`}
+                title={
+                  <label>
+                    <select onChange={setSchematron}>
+                      <option value={'jats4r'}>JATS4R</option>
+                      <option value={'elife-pre'}>eLife pre</option>
+                      <option value={'elife-post'}>eLife post</option>
+                    </select>
+                    {' Schematron'}
+                  </label>
+                }
+                url={`${VALIDATOR_URL}/schematron/`}
                 xml={xml}
+                schematron={schematron}
                 addAnnotations={addAnnotations}
                 scrollTo={scrollTo}
               />
