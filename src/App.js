@@ -215,6 +215,10 @@ export const App = () => {
     [validate]
   )
 
+  const handleSchematronChange = useCallback(event => {
+    setSchematron(event.target.value)
+  }, [])
+
   return (
     <Container>
       <Main>
@@ -276,10 +280,13 @@ export const App = () => {
               <Validations
                 title={
                   <label>
-                    <select onChange={setSchematron}>
+                    <select
+                      onChange={handleSchematronChange}
+                      value={schematron}
+                    >
                       <option value={'jats4r'}>JATS4R</option>
                       <option value={'elife-pre'}>eLife pre</option>
-                      <option value={'elife-post'}>eLife post</option>
+                      <option value={'elife-final'}>eLife final</option>
                     </select>
                     {' Schematron'}
                   </label>
