@@ -1,5 +1,6 @@
 {
   "name": "elife-validator-ui",
+  "alias": "elife-validator-ui",
   "version": 2,
   "public": true,
   "builds": [
